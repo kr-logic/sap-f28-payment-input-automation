@@ -10,32 +10,58 @@ Option Explicit
 
 Sub InputInvoicesToSelectionScreen()
 
-	Dim SapGuiAuto As Object
-	Dim App As Object
-	Dim Connection As Object
-	Dim Session As Object
+	'Set up SAP connection
+    Dim SapGuiAuto As Object
+    Dim App As Object
+    Dim Connection As Object
+    Dim Session As Object
 
-	Set SapGuiAuto = GetObject("SAPGUI")
-	Set App = SapGuiAuto.GetScriptingEngine
-	Set Connection = App.Children(0)
-	Set Session = Connection.Children(0)
+	On Error Resume Next
+    Set SapGuiAuto = GetObject("SAPGUI")
+    If SapGuiAuto Is Nothing Then
+        MsgBox "SAP GUI is not open!", vbCritical
+        Exit Sub
+    End If
+    
+    Set App = SapGuiAuto.GetScriptingEngine
+    Set Connection = App.Children(0)
+    Set Session = Connection.Children(0)
+    On Error GoTo 0
 
-	Dim itemCount As Integer
+	'Variables for the logic
+	Dim itemCount As Integer 'The invoice limit is around 990 in SAP, so Integer is enough.
+	Const MAX_SAP_ROWS As Integer = 990
+	Dim inputLastRow As Long
 	Dim i As Integer
 	Dim uiRow As Integer
 	Dim scroll As Integer
 	Dim ws As Worksheet
+	Dim invoiceArray() As Variant
 
 	Set ws = ThisWorkbook.Sheets(1) 'Change this if the source is on another sheet
 	
 	'Count the amount of invoices from D4 cell downwards
-	itemCount = ws.Range("D4", ws.Range("D4").End(xlDown)).Rows.Count
+	inputLastRow = ws.Cells(ws.Rows.Count, "D").End(xlUp).Row
+	If inputLastRow < 4 Then
+        MsgBox "No data found in Column D!", vbExclamation
+        Exit Sub
+    End If
+	
+	' Calculate item count (Row 4 is the first data row)
+    itemCount = inputLastRow - 3
+	
+	'990 item limit check
+    If itemCount > MAX_SAP_ROWS Then
+        MsgBox "You have " & itemCount & " items!" & vbCrLf & _
+               "The limit in SAP is " & MAX_SAP_ROWS & " per posting in this transaction.", vbCritical
+        Exit Sub
+    End If
 
 	ReDim invoiceArray(0 To itemCount - 1)
 
 	'From D4 downwards put the invoice numbers/references/other parameters into the array
 	For i = 0 To itemCount - 1
-		invoiceArray(i) = Cells(i + 4, 4).Value 
+		invoiceArray(i) = ws.Cells(i + 4, 4).Value 
 	Next i
 	
 	'Start filling the UI rows from the array
@@ -62,7 +88,7 @@ Sub InputInvoicesToSelectionScreen()
 	'At this point, the current content of invoiceArray is not needed, so it can be deleted/overwritten. In order to optimize memory usage, I decided to overwrite the memory data.
 	'From E4 downwards put the payment amounts into the array
 	For i = 0 To itemCount - 1
-		invoiceArray(i) = Cells(i + 4, 5).Value
+		invoiceArray(i) = ws.Cells(i + 4, 5).Value
 	Next i
 
 	'Start filling the UI rows from the array
