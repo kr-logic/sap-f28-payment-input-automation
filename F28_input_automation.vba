@@ -46,7 +46,7 @@ Sub InputInvoicesToSelectionScreen()
 			Session.FindById("wnd[0]").SendVKey 0
 			uiRow = 0
 			If Session.FindById("wnd[0]/sbar").MessageType = "W" Then
-				MsgBox "Érvénytelen bizonylatszámot adtál meg!"
+				MsgBox "There is an invalid invoice in the list!"
 				Exit Sub
 			End If
 		End If
