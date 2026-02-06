@@ -31,7 +31,7 @@ Sub InputInvoicesToSelectionScreen()
 	'Variables for the logic
 	Dim itemCount As Integer 'The invoice limit is around 990 in SAP, so Integer is enough.
 	Const MAX_SAP_ROWS As Integer = 990
-	Dim inputLastRow As Long
+	Dim inputLastRow As Integer
 	Dim i As Integer
 	Dim uiRow As Integer
 	Dim scroll As Integer
