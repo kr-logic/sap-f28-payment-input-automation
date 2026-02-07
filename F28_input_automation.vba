@@ -1,6 +1,6 @@
 ' ==============================================================================
 ' Project:      SAP Financial Partial Payment Posting Automation
-' Author:       Krisztián P.
+' Author:       Krisztián Princzinger
 ' Description:  Automates the allocation of partial payments in SAP (F-28).
 '               Handles pagination/scrolling on SAP table controls automatically.
 ' License:      MIT License
