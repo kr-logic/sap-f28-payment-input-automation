@@ -85,7 +85,8 @@ Sub InputInvoicesToSelectionScreen()
 	Session.FindById("wnd[0]/tbar[1]/btn[16]").Press 'Payment processing
 	Session.FindById("wnd[0]/usr/tabsTS/tabpPART").Select 'Partial payment
 
-	'At this point, the current content of invoiceArray is not needed, so it can be deleted/overwritten. In order to optimize memory usage, I decided to overwrite the memory data.
+	'At this point, the current content of invoiceArray is not needed, so it can be deleted/overwritten.
+	'In order to optimize memory usage, I decided to overwrite the memory data.
 	'From E4 downwards put the payment amounts into the array
 	For i = 0 To itemCount - 1
 		invoiceArray(i) = ws.Cells(i + 4, 5).Value
