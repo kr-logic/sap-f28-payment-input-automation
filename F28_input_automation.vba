@@ -30,7 +30,7 @@ Sub InputInvoicesToSelectionScreen()
 
 	'Variables for the logic
 	Dim itemCount As Integer 'The record limit for a document is around 990 in SAP, so Integer is enough.
-	Const MAX_SAP_ROWS As Integer = 990
+	Const MAX_SAP_ROWS As Integer = 990 'Customize this as needed if the limit is different
 	Dim inputLastRow As Integer
 	Dim i As Integer
 	Dim uiRow As Integer
